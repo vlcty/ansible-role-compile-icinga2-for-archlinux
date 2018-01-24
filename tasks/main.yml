@@ -1,0 +1,114 @@
+---
+- fail:
+      msg: "Base system isn't Archlinux. WTF is this shit?"
+  when: ansible_os_family != "Archlinux"
+
+- name: Getting UNIX user workhorse
+  shell: "whoami"
+  register: whoami
+  become: false
+
+#
+# Prepare server
+#
+- block:
+
+    - name: Adding multicore support for makepkg
+      lineinfile:
+          path: /etc/makepkg.conf
+          line: "MAKEFLAGS=\"-j{{ compiler_threads }}\""
+          state: present
+
+    - name: Installing needed packages
+      pacman:
+          name: "{{ item }}"
+          state: present
+          update_cache: true
+      with_items:
+          - base-devel
+          - git
+          - vim
+
+    - name: Uploading sudo file
+      template:
+          src: sudofile.j2
+          dest: /etc/sudoers.d/sudo-icingacompiler
+
+  become: true
+
+#
+# Prepare icinga and compile it
+#
+- block:
+    - name: Cloning icinga2 git repository
+      git:
+          repo: https://github.com/Icinga/icinga2.git
+          dest: "/home/{{ whoami.stdout }}/icinga2-source"
+
+    - name: Getting latest tag
+      shell: "chdir=/home/{{ whoami.stdout }}/icinga2-source git describe --abbrev=0 --tags"
+      register: latesttag
+      changed_when: false
+
+    - name: Stripping character "v" from git tag
+      set_fact:
+          icingaversion: "{{ latesttag.stdout | replace('v', '') }}"
+
+    - debug: msg="Latest Version is {{ icingaversion }}"
+
+    - name: Uploading PKGBUILD
+      template:
+          src: PKGBUILD.j2
+          dest: /home/{{ whoami.stdout }}/PKGBUILD
+
+    - name: Uploading icinga2.install
+      copy:
+          src: icinga2.install
+          dest: "/home/{{ whoami.stdout }}/icinga2.install"
+
+    - name: Generating .SRCINFO
+      shell: makepkg --printsrcinfo > .SRCINFO
+      changed_when: false
+      register: srcinfo
+      args:
+          warn: false
+
+    - name: Compiling binaries
+      shell: "nice -n {{ compiler_nicelevel }} makepkg -s --noconfirm"
+
+    - name: Searching binaries
+      find:
+          path: "/home/{{ whoami.stdout }}"
+          patterns: "*.pkg.tar.xz"
+          recurse: true
+      register: icingavar
+
+  become: false
+
+#
+# Prepare local files
+#
+
+- block:
+    - name: Searching old binaries
+      find:
+          path: "{{ playbook_dir }}/icinga2files"
+          patterns: "icinga*.pkg.tar.xz"
+      register: localbinaries
+
+    - name: Deleting old binaries
+      file:
+          path: "{{ item.path }}"
+          state: absent
+      with_items: "{{ localbinaries.files }}"
+
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Downloading icinga2 packages
+  fetch:
+      src: "{{ item.path }}"
+      dest: "{{ playbook_dir }}/icinga2files/{{ item.path | basename }}"
+      flat: yes
+  with_items: "{{ icingavar.files }}"
+  become: false
