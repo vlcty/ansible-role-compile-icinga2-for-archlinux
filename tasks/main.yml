@@ -94,6 +94,12 @@
 #
 
 - block:
+
+    - name: Creating local directory for finished packages
+      file:
+          path: "{{ playbook_dir }}/icinga2files"
+          state: directory
+
     - name: Searching old binaries
       find:
           path: "{{ playbook_dir }}/icinga2files"
