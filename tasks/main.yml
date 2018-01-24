@@ -1,9 +1,9 @@
 ---
 - fail:
-      msg: "Base system isn't Archlinux. WTF is this shit?"
+      msg: "Wait, this isn't Archlinux! WTF is this crappy shit you stupid fuckface!"
   when: ansible_os_family != "Archlinux"
 
-- name: Getting UNIX user workhorse
+- name: Getting UNIX user workhorse name
   shell: "whoami"
   register: whoami
   become: false

@@ -29,6 +29,8 @@ You need the following to use this role:
   * A few GBytes diskspace
 * A strategy to distribute your new packages
 
+Don't try to run it on something other than Archlinux. If you ignore this warning you will get insulted!
+
 ## Security
 
 This role deploys a sudoers file under `/etc/sudoers.d/sudo-icingacompiler`. The UNIX user which whom you connect to the system is allowed to run pacman with sudo without supplying a password. **This allows the user to install ANYTHING!**. Please keep that in mind!  
