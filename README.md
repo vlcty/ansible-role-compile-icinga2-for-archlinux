@@ -1,6 +1,6 @@
 # ansible-role-compile-icinga2-for-archlinux
 
-This ansible role prepares an Archlinux server to compile Icinga 2 for Archlinux. This has to be done, because
+This ansible role prepares an Archlinux server to compile Icinga 2 for Archlinux.
 
 ## How it works
 
