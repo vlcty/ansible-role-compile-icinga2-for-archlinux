@@ -23,10 +23,10 @@ You should always update your system you are compiling on before running this ro
 You need the following to use this role:
 * A working ansible environment
 * A compiler machine running Archlinux with
- * a normal UNIX user you connect to first (Login directly at root will fuck up everything and you should be ashamed if you do something like that!)
- * 2 CPU cores but more will speed things up. More than 12 is not helping
- * 4+ GByte of RAM
- * A few GByte diskspace
+  * a normal UNIX user you connect to first (Login directly at root will fuck up everything and you should be ashamed if you do something like that!)
+  * 2 CPU cores but more will speed things up. More than 12 is not helping
+  * 4+ GByte of RAM
+  * A few GBytes diskspace
 * A strategy to distribute your new packages
 
 ## Security
