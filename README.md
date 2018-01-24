@@ -40,3 +40,7 @@ If you ask me you should destroy the compiler machine right after you finished d
 
 I run my own Archlinux mirror server distributing the Icinga2 packages. The packages there are generated with this role. This mirror is unofficial but public available.  
 If you want to use it check this out: https://blog.veloc1ty.de/2018/01/24/inofficial-icinga-2-archlinux-mirror-server/
+
+## Other uninteresting stuff
+
+On some systems Trump will be insulted because, well, he surely earned it! If you are a Trump supporter and feel offended by this: Delete this role now and go crying. Or set `compiler_insult_trump` to `false` if you really have to ... oh my god you are so annoying!

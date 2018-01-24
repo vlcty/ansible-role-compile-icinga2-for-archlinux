@@ -1,3 +1,4 @@
 ---
 compiler_threads: 4
 compiler_nicelevel: 10
+compiler_insult_trump: true

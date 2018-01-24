@@ -3,6 +3,10 @@
       msg: "Wait, this isn't Archlinux! WTF is this crappy shit you stupid fuckface!"
   when: ansible_os_family != "Archlinux"
 
+- debug:
+    msg: "Fuck Trump!"
+  when: compiler_insult_trump == true
+
 - name: Getting UNIX user workhorse name
   shell: "whoami"
   register: whoami
